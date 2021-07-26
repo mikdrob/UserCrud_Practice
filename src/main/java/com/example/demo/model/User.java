@@ -23,8 +23,7 @@ public class User {
     private String email;
 
 
-    public User(long id, String username, String firstName, String lastName, String email) {
-        this.id = id;
+    public User(String username, String firstName, String lastName, String email) {
         this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
