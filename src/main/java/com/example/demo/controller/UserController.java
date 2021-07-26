@@ -41,7 +41,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getTutorialById(@PathVariable("id") long id) {
+    public ResponseEntity<User> GetTutorialById(@PathVariable("id") long id) {
         Optional<User> userData = service.GetbyId(id);
         return userData.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -53,7 +53,7 @@ public class UserController {
             if (firstName == null || lastName == null) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                users = new ArrayList<>(service.FindByFirstNameOrLastName(firstName, lastName));
+                users = new ArrayList<>(service.FindByFirstNameAndLastName(firstName, lastName));
             }
             if (users.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -65,16 +65,16 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
+    public ResponseEntity<User> CreateUser(@RequestBody User user) {
         try {
             User _user = service.Add(
                     new User
-                    (
-                            user.getUsername(),
-                            user.getFirstName(),
-                            user.getLastName(),
-                            user.getEmail()
-                    ));
+                            (
+                                    user.getUsername(),
+                                    user.getFirstName(),
+                                    user.getLastName(),
+                                    user.getEmail()
+                            ));
 
             return new ResponseEntity<>(_user, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -83,7 +83,7 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
+    public ResponseEntity<User> UpdateUser(@PathVariable("id") long id, @RequestBody User user) {
         Optional<User> userData = service.GetbyId(id);
 
         if (userData.isPresent()) {
@@ -99,7 +99,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") long id) {
+    public ResponseEntity<HttpStatus> DeleteUser(@PathVariable("id") long id) {
         try {
             service.Delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -109,7 +109,7 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity<HttpStatus> deleteAllUser() {
+    public ResponseEntity<HttpStatus> DeleteAllUser() {
         try {
             service.DeleteAll();
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);

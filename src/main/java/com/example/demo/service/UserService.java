@@ -42,7 +42,7 @@ public class UserService {
         return userRepository.findByUsernameContaining(username);
     }
 
-    public List<User> FindByFirstNameOrLastName(String firstName, String lastName) {
+    public List<User> FindByFirstNameAndLastName(String firstName, String lastName) {
         Specification<User> userFirstName = userRepository.firstNameContains(firstName);
         Specification<User> userLastName = userRepository.lastNameContains(lastName);
         return userRepository.findAll(where(userFirstName).and(userLastName));
