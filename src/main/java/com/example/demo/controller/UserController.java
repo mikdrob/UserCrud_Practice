@@ -27,9 +27,9 @@ public class UserController {
         try {
             List<User> users = new ArrayList<User>();
             if (username == null) {
-                service.GetAll().forEach(users::add);
+                users.addAll(service.GetAll());
             } else {
-                service.FindByUsername(username).forEach(users::add);
+                users.addAll(service.FindByUsername(username));
             }
             if (users.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -43,12 +43,7 @@ public class UserController {
     @GetMapping("/users/{id}")
     public ResponseEntity<User> getTutorialById(@PathVariable("id") long id) {
         Optional<User> userData = service.GetbyId(id);
-        boolean present = userData.isPresent();
-        if (userData.isPresent()) {
-            return new ResponseEntity<>(userData.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return userData.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/users")
@@ -69,7 +64,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/tutorials/{id}")
+    @PutMapping("/users/{id}")
     public ResponseEntity<User> updateUser(@PathVariable("id") long id, @RequestBody User user) {
         Optional<User> userData = service.GetbyId(id);
 
@@ -83,5 +78,26 @@ public class UserController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") long id) {
+        try {
+            service.Delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/users")
+    public ResponseEntity<HttpStatus> deleteAllUser() {
+        try {
+            service.DeleteAll();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

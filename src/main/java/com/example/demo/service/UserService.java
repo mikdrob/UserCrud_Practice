@@ -28,6 +28,13 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public void Delete(Long id){
+        userRepository.deleteById(id);
+    }
+    public void DeleteAll(){
+        userRepository.deleteAll();
+    }
+
     public List<User> FindByUsername(String username) {
         return userRepository.findByUsernameContaining(username);
     }
