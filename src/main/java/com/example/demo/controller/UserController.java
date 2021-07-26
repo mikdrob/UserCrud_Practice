@@ -25,7 +25,7 @@ public class UserController {
     @GetMapping("/users")
     public ResponseEntity<List<User>> GetAllUsers(@RequestParam(required = false) String username) {
         try {
-            List<User> users = new ArrayList<User>();
+            List<User> users = new ArrayList<>();
             if (username == null) {
                 users.addAll(service.GetAll());
             } else {
