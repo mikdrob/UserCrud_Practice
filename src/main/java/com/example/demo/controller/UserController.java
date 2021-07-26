@@ -46,6 +46,24 @@ public class UserController {
         return userData.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/users/name")
+    public ResponseEntity<List<User>> GetUsersByFullName(@RequestParam String firstName, @RequestParam String lastName) {
+        try {
+            List<User> users;
+            if (firstName == null || lastName == null) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                users = new ArrayList<>(service.FindByFirstNameOrLastName(firstName, lastName));
+            }
+            if (users.isEmpty()) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         try {

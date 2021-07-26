@@ -6,7 +6,11 @@ import java.util.Optional;
 
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 public class UserService {
@@ -38,4 +42,12 @@ public class UserService {
     public List<User> FindByUsername(String username) {
         return userRepository.findByUsernameContaining(username);
     }
+
+    public List<User> FindByFirstNameOrLastName(String firstName, String lastName) {
+        Specification<User> userFirstName = userRepository.firstNameContains(firstName);
+        Specification<User> userLastName = userRepository.lastNameContains(lastName);
+        return userRepository.findAll(where(userFirstName).and(userLastName));
+    }
+
+
 }
