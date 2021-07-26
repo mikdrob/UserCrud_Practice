@@ -52,8 +52,13 @@ public class UserController {
         }
     }
 
-    @PostMapping("/user")
-    public ResponseEntity<User> PostPerson(@RequestBody User user) {
-        return ResponseEntity.ok(service.Add(user));
+    @PostMapping("/users")
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        try {
+            User _user = service.Add(user);
+            return new ResponseEntity<>(_user, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     }
