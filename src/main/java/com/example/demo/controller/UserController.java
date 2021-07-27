@@ -24,9 +24,6 @@ public class UserController {
     private final UserService service;
 
     @Autowired
-    private ModelMapper modelMapper;
-
-    @Autowired
     public UserController(UserService service) {
         this.service = service;
     }
@@ -76,8 +73,7 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<User> CreateUser(@Valid @RequestBody UserDto userDto) {
         try {
-            User user = modelMapper.map(userDto, User.class);
-            return new ResponseEntity<>(service.Add(user), HttpStatus.CREATED);
+            return new ResponseEntity<>(service.Add(userDto), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -88,10 +84,7 @@ public class UserController {
         Optional<User> userData = service.GetbyId(id);
 
         if (userData.isPresent()) {
-            User _user = modelMapper.map(userDto, User.class);
-            _user.setId(userData.get().getId());
-
-            return new ResponseEntity<>(service.Add(_user), HttpStatus.OK);
+            return new ResponseEntity<>(service.Add(userDto), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
