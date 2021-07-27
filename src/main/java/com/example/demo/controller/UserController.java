@@ -8,14 +8,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
+@Validated
 @RequestMapping("/api/v1")
 public class UserController {
     private final UserService service;
@@ -71,7 +74,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> CreateUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<User> CreateUser(@Valid @RequestBody UserDto userDto) {
         try {
             User user = modelMapper.map(userDto, User.class);
             return new ResponseEntity<>(service.Add(user), HttpStatus.CREATED);
@@ -81,15 +84,13 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> UpdateUser(@PathVariable("id") long id, @RequestBody UserDto userDto) {
+    public ResponseEntity<User> UpdateUser(@PathVariable("id") long id, @Valid @RequestBody UserDto userDto) {
         Optional<User> userData = service.GetbyId(id);
 
         if (userData.isPresent()) {
-            User _user = userData.get();
-            _user.setUsername(user.getUsername());
-            _user.setFirstName(user.getFirstName());
-            _user.setLastName(user.getLastName());
-            _user.setEmail(user.getEmail());
+            User _user = modelMapper.map(userDto, User.class);
+            _user.setId(userData.get().getId());
+
             return new ResponseEntity<>(service.Add(_user), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

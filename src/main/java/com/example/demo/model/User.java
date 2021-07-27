@@ -1,6 +1,10 @@
 package com.example.demo.model;
 
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import com.sun.istack.Nullable;
+
 import javax.persistence.*;
 import java.util.Objects;
 
