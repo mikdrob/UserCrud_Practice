@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.UserDto;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +38,7 @@ public class UserServiceTest {
     @Test
     void canAdd() {
         // given
-        User user = new User();
+        UserDto user = new UserDto();
         user.setUsername("testusername");
 
         // when
