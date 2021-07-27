@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.dto.UserDto;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
 public class UserController {
     private final UserService service;
+
+    @Autowired
+    private ModelMapper modelMapper;
 
     @Autowired
     public UserController(UserService service) {
@@ -65,25 +71,17 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> CreateUser(@RequestBody User user) {
+    public ResponseEntity<User> CreateUser(@RequestBody UserDto userDto) {
         try {
-            User _user = service.Add(
-                    new User
-                            (
-                                    user.getUsername(),
-                                    user.getFirstName(),
-                                    user.getLastName(),
-                                    user.getEmail()
-                            ));
-
-            return new ResponseEntity<>(_user, HttpStatus.CREATED);
+            User user = modelMapper.map(userDto, User.class);
+            return new ResponseEntity<>(service.Add(user), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> UpdateUser(@PathVariable("id") long id, @RequestBody User user) {
+    public ResponseEntity<User> UpdateUser(@PathVariable("id") long id, @RequestBody UserDto userDto) {
         Optional<User> userData = service.GetbyId(id);
 
         if (userData.isPresent()) {
