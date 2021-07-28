@@ -4,7 +4,6 @@ package com.example.demo.controller;
 import com.example.demo.dto.UserDto;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +28,13 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<List<User>> GetAllUsers(@RequestParam(required = false) String username) {
+    public ResponseEntity<List<User>> getAllUsers(@RequestParam(required = false) String username) {
         try {
             List<User> users = new ArrayList<>();
             if (username == null) {
-                users.addAll(service.GetAll());
+                users.addAll(service.getAll());
             } else {
-                users.addAll(service.FindByUsername(username));
+                users.addAll(service.findByUsername(username));
             }
             if (users.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -47,19 +46,19 @@ public class UserController {
     }
 
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> GetTutorialById(@PathVariable("id") long id) {
-        Optional<User> userData = service.GetbyId(id);
+    public ResponseEntity<User> getTutorialById(@PathVariable("id") long id) {
+        Optional<User> userData = service.getbyId(id);
         return userData.map(user -> new ResponseEntity<>(user, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/users/name")
-    public ResponseEntity<List<User>> GetUsersByFullName(@RequestParam String firstName, @RequestParam String lastName) {
+    public ResponseEntity<List<User>> getUsersByFullName(@RequestParam String firstName, @RequestParam String lastName) {
         try {
             List<User> users;
             if (firstName == null || lastName == null) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {
-                users = new ArrayList<>(service.FindByFirstNameAndLastName(firstName, lastName));
+                users = new ArrayList<>(service.findByFirstNameAndLastName(firstName, lastName));
             }
             if (users.isEmpty()) {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -71,7 +70,7 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<User> CreateUser(@Valid @RequestBody UserDto userDto) {
+    public ResponseEntity<User> createUser(@Valid @RequestBody UserDto userDto) {
         try {
             return new ResponseEntity<>(service.Add(userDto), HttpStatus.CREATED);
         } catch (Exception e) {
@@ -80,8 +79,8 @@ public class UserController {
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> UpdateUser(@PathVariable("id") long id, @Valid @RequestBody UserDto userDto) {
-        Optional<User> userData = service.GetbyId(id);
+    public ResponseEntity<User> updateUser(@PathVariable("id") long id, @Valid @RequestBody UserDto userDto) {
+        Optional<User> userData = service.getbyId(id);
 
         if (userData.isPresent()) {
             return new ResponseEntity<>(service.Add(userDto), HttpStatus.OK);
@@ -91,9 +90,9 @@ public class UserController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<HttpStatus> DeleteUser(@PathVariable("id") long id) {
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") long id) {
         try {
-            service.Delete(id);
+            service.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -101,9 +100,9 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity<HttpStatus> DeleteAllUser() {
+    public ResponseEntity<HttpStatus> deleteAllUser() {
         try {
-            service.DeleteAll();
+            service.deleteAll();
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

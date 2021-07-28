@@ -29,7 +29,7 @@ public class UserServiceTest {
     @Test
     void canGetAll() {
         // when
-        userService.GetAll();
+        userService.getAll();
         // then
         verify(userRepository).findAll();
     }

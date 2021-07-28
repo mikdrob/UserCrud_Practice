@@ -26,11 +26,11 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> GetAll() {
+    public List<User> getAll() {
         return userRepository.findAll();
     }
 
-    public Optional<User> GetbyId(long id) {
+    public Optional<User> getbyId(long id) {
         return userRepository.findById(id);
     }
 
@@ -39,18 +39,18 @@ public class UserService {
         return userRepository.save(_user);
     }
 
-    public void Delete(Long id){
+    public void delete(Long id){
         userRepository.deleteById(id);
     }
-    public void DeleteAll(){
+    public void deleteAll(){
         userRepository.deleteAll();
     }
 
-    public List<User> FindByUsername(String username) {
+    public List<User> findByUsername(String username) {
         return userRepository.findByUsernameContaining(username);
     }
 
-    public List<User> FindByFirstNameAndLastName(String firstName, String lastName) {
+    public List<User> findByFirstNameAndLastName(String firstName, String lastName) {
         Specification<User> userFirstName = userRepository.firstNameContains(firstName);
         Specification<User> userLastName = userRepository.lastNameContains(lastName);
         return userRepository.findAll(where(userFirstName).and(userLastName));
